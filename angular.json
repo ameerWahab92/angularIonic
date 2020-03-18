@@ -15,22 +15,60 @@
       "prefix": "IntergrateIonic",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-builders/custom-webpack:browser",
           "options": {
             "outputPath": "dist/IntergrateIonic",
             "index": "src/index.html",
-            "main": "src/main.ts",
+            "main": "src/main.single-spa.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "aot": false,
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              {
+                "glob": "**/*.svg",
+                "input": "node_modules/ionicons/dist/ionicons/svg",
+                "output": "./svg"
+              }
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              {
+                "input": "node_modules/@ionic/angular/css/normalize.css"
+              },
+              {
+                "input": "node_modules/@ionic/angular/css/structure.css"
+              },
+              {
+                "input": "node_modules/@ionic/angular/css/typography.css"
+              },
+              {
+                "input": "node_modules/@ionic/angular/css/core.css"
+              },
+              {
+                "input": "node_modules/@ionic/angular/css/padding.css"
+              },
+              {
+                "input": "node_modules/@ionic/angular/css/float-elements.css"
+              },
+              {
+                "input": "node_modules/@ionic/angular/css/text-alignment.css"
+              },
+              {
+                "input": "node_modules/@ionic/angular/css/text-transformation.css"
+              },
+              {
+                "input": "node_modules/@ionic/angular/css/flex-utils.css"
+              },
+              {
+                "input": "src/theme/variables.css"
+              }
             ],
-            "scripts": []
+            "scripts": [],
+            "customWebpackConfig": {
+              "path": "./extra-webpack.config.js"
+            }
           },
           "configurations": {
             "production": {
@@ -65,7 +103,7 @@
           }
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
             "browserTarget": "IntergrateIonic:build"
           },
@@ -122,8 +160,33 @@
               "devServerTarget": "IntergrateIonic:serve:production"
             }
           }
+        },
+        "ionic-cordova-serve": {
+          "builder": "@ionic/angular-toolkit:cordova-serve",
+          "options": {
+            "cordovaBuildTarget": "IntergrateIonic:ionic-cordova-build",
+            "devServerTarget": "IntergrateIonic:serve"
+          },
+          "configurations": {
+            "production": {
+              "cordovaBuildTarget": "IntergrateIonic:ionic-cordova-build:production",
+              "devServerTarget": "IntergrateIonic:serve:production"
+            }
+          }
+        },
+        "ionic-cordova-build": {
+          "builder": "@ionic/angular-toolkit:cordova-build",
+          "options": {
+            "browserTarget": "IntergrateIonic:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "IntergrateIonic:build:production"
+            }
+          }
         }
       }
-    }},
+    }
+  },
   "defaultProject": "IntergrateIonic"
 }
